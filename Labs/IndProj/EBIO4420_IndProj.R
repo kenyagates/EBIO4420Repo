@@ -57,73 +57,50 @@ Total_Species <- na.omit(Total_Species)
 
 # Creating a for loop to compare species lists between comunity classes 
 
-## Comparing Barren Vs. others 
 
- 
+
+# Trying to consolidate Barren for loops into one 
+
 "Matches_BP/SB" = c() # trying to create a vector container
+"Matches_BP/WM" = c()
+"Matches_BP/MM" = c()
+"Matches_BP/DM" = c()
+"Matches_BP/FF" = c()
 
-# For loop comparing between Barren and Snow Bed plots \
+
 
 for (i in 1:length(BP_Species)) {
   for (j in 1:length(SB_Species)){
     if (BP_Species[i] == SB_Species[j]) { 
-      `Matches_BP/SB`[length(`Matches_BP/SB`)+1] = c(BP_Species[i], i)
+      `Matches_BP/SB`[length(`Matches_BP/SB`)+1] = c(BP_Species[i], i) 
     }
-  }
-}
-`Matches_BP/SB`
-
-# For loop comparing between Barren and Wet Meadow plots 
-
-"Matches_BP/WM" = c() # trying to create a vector container
-
-# For loop comparing between Barren and Wet Meadow plots \
-for (i in 1:length(BP_Species)) {
-  for (j in 1:length(WM_Species)){
-    if (BP_Species[i] == WM_Species[j]) { 
-      `Matches_BP/WM`[length(`Matches_BP/WM`)+1] = c(BP_Species[i], i)
+  } 
+    for (j in 1:length(WM_Species)){
+      if (BP_Species[i] == WM_Species[j]) { 
+        `Matches_BP/WM`[length(`Matches_BP/WM`)+1] = c(BP_Species[i], i)
+      }
+    } 
+    for (j in 1:length(MM_Species)){
+      if (BP_Species[i] == MM_Species[j]) { 
+        `Matches_BP/MM`[length(`Matches_BP/MM`)+1] = c(BP_Species[i], i)
+      }
     }
-  }
-}
-`Matches_BP/WM`
-# Between Barren and Moist Meadow
-
-"Matches_BP/MM" = c() # trying to create a vector container
-# For loop comparing between Barren and Snow Bed plots \
-for (i in 1:length(BP_Species)) {
-  for (j in 1:length(MM_Species)){
-    if (BP_Species[i] == MM_Species[j]) { 
-      `Matches_BP/MM`[length(`Matches_BP/MM`)+1] = c(BP_Species[i], i)
-    }
-  }
-}
-`Matches_BP/MM`
-
-# Between Barren and Dry Meadow  
-
-"Matches_BP/DM" = c() # trying to create a vector container
-# For loop comparing between Barren and Snow Bed plots \
-for (i in 1:length(BP_Species)) {
-  for (j in 1:length(DM_Species)){
+    for (j in 1:length(DM_Species)){
     if (BP_Species[i] == DM_Species[j]) { 
       `Matches_BP/DM`[length(`Matches_BP/DM`)+1] = c(BP_Species[i], i)
+      }
     }
-  }
-}
-`Matches_BP/DM`
-
-# Barren vs. Fellfield
-
-"Matches_BP/FF" = c() # trying to create a vector container
-# For loop comparing between Barren and Fellfield
-for (i in 1:length(BP_Species)) {
-  for (j in 1:length(FF_Species)){
+    for (j in 1:length(FF_Species)){
     if (BP_Species[i] == FF_Species[j]) { 
       `Matches_BP/FF`[length(`Matches_BP/FF`)+1] = c(BP_Species[i], i)
     }
   }
-}
+  
+  }
+
+`Matches_BP/SB`
+`Matches_BP/WM`
+`Matches_BP/MM`
+`Matches_BP/DM`
 `Matches_BP/FF`
-
-
 
