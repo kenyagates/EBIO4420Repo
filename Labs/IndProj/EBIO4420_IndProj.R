@@ -17,13 +17,13 @@ data <- read.csv("NSTL_2019_KGupdated.csv")
 
 
 ## creating species list for each community class
-"BP_Species" <- as.character(unique(Barren_plots$Species, incomparables = F)) # Barren Species List
-"SB_Species" <- as.character(unique(SB_plots$Species, incomparables = F)) # Snow Bed Species List
-"WM_Species" <- as.character(unique(WM_plots$Species, incomparables = F)) # Wet Meadow Species
-"MM_Species" <- as.character(unique(MM_plots$Species, incomparables = F)) # Moist Meadow Species
-"DM_Species" <- as.character(unique(DM_plots$Species, incomparables = F)) # Dry Meadow 
-"FF_Species" <- as.character(unique(FF_plots$Species, incomparables = F)) # FellField 
-
+"BP_Species" <- na.omit(as.character(unique(Barren_plots$Species, incomparables = F))) # Barren Species List
+"SB_Species" <- na.omit(as.character(unique(SB_plots$Species, incomparables = F))) # Snow Bed Species List
+"WM_Species" <- na.omit(as.character(unique(WM_plots$Species, incomparables = F)))# Wet Meadow Species
+"MM_Species" <- na.omit(as.character(unique(MM_plots$Species, incomparables = F)))# Moist Meadow Species
+"DM_Species" <- na.omit(as.character(unique(DM_plots$Species, incomparables = F)))# Dry Meadow 
+"FF_Species" <- na.omit(as.character(unique(FF_plots$Species, incomparables = F)))# FellField 
+BP_Species
 # How many species are in each plot?
 
 "BP_SpeciesN" <- length(as.integer(BP_Species))
@@ -271,3 +271,17 @@ for (i in 1:length(DM_Species)) {
 `Matches_MM/DM_length`
 `Matches_MM/FF_length`
 `Matches_DM/FF_length`
+
+## Creating a venn diagram graphic showing shared species in 5 classes
+ # loading the package 
+
+ library(gplots)
+ "X" <- list(
+   "Fell Field" = FF_Species,
+   "Snow Bed" = SB_Species,
+   "Wet Meadow" = WM_Species,
+   "Moist Meadow" = MM_Species,
+   "Dry Meadow" = DM_Species)
+venn(X, universe = NA)
+
+
