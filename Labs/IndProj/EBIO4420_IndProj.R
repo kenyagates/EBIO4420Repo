@@ -34,6 +34,7 @@ data <- read.csv("NSTL_2019_KGupdated.csv")
 "FF_SpeciesN" <- length(as.integer(FF_Species))
 
 "SpeciesN" <- c(BP_SpeciesN, SB_SpeciesN, WM_SpeciesN, MM_SpeciesN, DM_SpeciesN, FF_SpeciesN)
+SpeciesN
 typeof(SpeciesN)
 
 
@@ -55,7 +56,7 @@ typeof(SpeciesN)
 "Total_Species" <- as.character(unique(data$Species, incomparables = F))
 Total_Species <- na.omit(Total_Species)
 
-
+Total_Species
 
 ## For loop comparing barren plots species lists with all other community class species lists  
 
@@ -141,7 +142,7 @@ for (i in 1:length(SB_Species)) {
 `Matches_SB/WM`
 `Matches_SB/MM`
 `Matches_SB/DM`
-`Matches_SB/MM`
+`Matches_SB/FF`
 
 
 ## Wet Meadow vs. remaining
@@ -175,7 +176,7 @@ for (i in 1:length(WM_Species)) {
 
 `Matches_WM/MM`
 `Matches_WM/DM`
-`Matches_WM/MM`
+`Matches_WM/FF`
  
 
 ## Moist Meadow vs remaining 
@@ -218,3 +219,55 @@ for (i in 1:length(DM_Species)) {
 }
 
 `Matches_DM/FF`
+
+# Showing all vectors of class species matches 
+
+`Matches_BP/SB`
+`Matches_BP/WM`
+`Matches_BP/MM`
+`Matches_BP/DM`
+`Matches_BP/FF`
+`Matches_SB/WM`
+`Matches_SB/MM`
+`Matches_SB/DM`
+`Matches_SB/FF`
+`Matches_WM/MM`
+`Matches_WM/DM`
+`Matches_WM/FF`
+`Matches_MM/DM`
+`Matches_MM/FF`
+`Matches_DM/FF`
+
+# as length?
+
+
+"Matches_BP/SB_length" <- length(as.integer(unique(`Matches_BP/SB`, incomparables = F)))
+"Matches_BP/WM_length" <- length(as.integer(unique(`Matches_BP/WM`, incomparables = F)))
+"Matches_BP/MM_length" <- length(as.integer(unique(`Matches_BP/MM`, incomparables = F)))
+"Matches_BP/DM_length" <- length(as.integer(unique(`Matches_BP/DM`, incomparables = F)))
+"Matches_BP/FF_length" <- length(as.integer(unique(`Matches_BP/FF`, incomparables = F)))
+"Matches_SB/WM_length" <- length(as.integer(unique(`Matches_SB/WM`, incomparables = F)))
+"Matches_SB/MM_length" <- length(as.integer(unique(`Matches_SB/MM`, incomparables = F)))
+"Matches_SB/DM_length" <- length(as.integer(unique(`Matches_SB/DM`, incomparables = F)))
+"Matches_SB/FF_length" <- length(as.integer(unique(`Matches_SB/FF`, incomparables = F)))
+"Matches_WM/MM_length" <- length(as.integer(unique(`Matches_WM/MM`, incomparables = F)))
+"Matches_WM/DM_length" <- length(as.integer(unique(`Matches_WM/DM`, incomparables = F)))
+"Matches_WM/FF_length" <- length(as.integer(unique(`Matches_WM/FF`, incomparables = F)))
+"Matches_MM/DM_length" <- length(as.integer(unique(`Matches_MM/DM`, incomparables = F)))
+"Matches_MM/FF_length" <- length(as.integer(unique(`Matches_MM/FF`, incomparables = F)))
+"Matches_DM/FF_length" <- length(as.integer(unique(`Matches_DM/FF`, incomparables = F)))
+`Matches_BP/SB_length`
+`Matches_BP/WM_length`
+`Matches_BP/MM_length`
+`Matches_BP/DM_length`
+`Matches_BP/FF_length`
+`Matches_SB/WM_length`
+`Matches_SB/MM_length`
+`Matches_SB/DM_length`
+`Matches_SB/FF_length`
+`Matches_WM/MM_length`
+`Matches_WM/DM_length`
+`Matches_WM/FF_length`
+`Matches_MM/DM_length`
+`Matches_MM/FF_length`
+`Matches_DM/FF_length`
