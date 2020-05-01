@@ -1,12 +1,15 @@
+### Assessing lichen species as indicators of community type in the alpine tundra ###
+
+# Loading required packages
 library(tidyverse)
 library(dplyr)
 
+# Part 1: Subsetting data and creating species list for each class
+
+# Reading in the original data file 
 data <- read.csv("NSTL_2019_KGupdated.csv")
 
-# probably need to change plot names to make compatable: community class data is 101 format; Lichen data is 10A format 
-# probably need to eliminate spaces in entries 
-
-## subsetting data by class
+## 1a: Subsetting data by class
 "Barren_plots" <- data[data$Class %in% c("Barren"), ]
 "SB_plots" <- data[data$Class %in% c("Snow Bank"), ]
 "WM_plots" <- data[data$Class %in% c("Wet Meadow"), ]
@@ -15,29 +18,26 @@ data <- read.csv("NSTL_2019_KGupdated.csv")
 "FF_plots" <- data[data$Class %in% c("Fellfield"), ]
 
 
-
-## creating species list for each community class
+## 1b: Creating species list for each community class
 "BP_Species" <- na.omit(as.character(unique(Barren_plots$Species, incomparables = F))) # Barren Species List
+
 "SB_Species" <- na.omit(as.character(unique(SB_plots$Species, incomparables = F))) # Snow Bed Species List
-"WM_Species" <- na.omit(as.character(unique(WM_plots$Species, incomparables = F)))# Wet Meadow Species
-"MM_Species" <- na.omit(as.character(unique(MM_plots$Species, incomparables = F)))# Moist Meadow Species
-"DM_Species" <- na.omit(as.character(unique(DM_plots$Species, incomparables = F)))# Dry Meadow 
-"FF_Species" <- na.omit(as.character(unique(FF_plots$Species, incomparables = F)))# FellField 
-BP_Species
-# How many species are in each plot?
 
-"BP_SpeciesN" <- length(as.integer(BP_Species))
-"SB_SpeciesN" <- length(as.integer(SB_Species))
-"WM_SpeciesN" <- length(as.integer(WM_Species))
-"MM_SpeciesN" <- length(as.integer(MM_Species))
-"DM_SpeciesN" <- length(as.integer(DM_Species))
-"FF_SpeciesN" <- length(as.integer(FF_Species))
+"WM_Species" <- na.omit(as.character(unique(WM_plots$Species, incomparables = F))) # Wet Meadow Species List
 
-"SpeciesN" <- c(BP_SpeciesN, SB_SpeciesN, WM_SpeciesN, MM_SpeciesN, DM_SpeciesN, FF_SpeciesN)
-SpeciesN
-typeof(SpeciesN)
+"MM_Species" <- na.omit(as.character(unique(MM_plots$Species, incomparables = F))) # Moist Meadow Species List
+
+"DM_Species" <- na.omit(as.character(unique(DM_plots$Species, incomparables = F))) # Dry Meadow List
+
+"FF_Species" <- na.omit(as.character(unique(FF_plots$Species, incomparables = F))) # FellField Species List
+
+# Creating a vector of all species 
+"Total_Species" <- na.omit(as.character(unique(data$Species, incomparables = F)))
 
 
+## 1c: exploreing some of the characteristics of the data 
+
+"SpeciesN" <- length(Total_Species) # Assigning the number of species to a value
 
 ## determining how many plots are in each community class 
 
@@ -48,19 +48,13 @@ typeof(SpeciesN)
 "DM_PlotN" <- length(as.integer(unique(DM_plots$Plot, incomparables = F)))
 "FF_PlotN" <- length(as.integer(unique(FF_plots$Plot, incomparables = F)))
 
-"Plot#" <- c(BP_PlotN, SB_PlotN, WM_PlotN, MM_PlotN, DM_PlotN, FF_PlotN) # creating a vector of the number of plots per community class
+# Part 2: Exploring the relationships between community classes in terms of their shared species
 
+# 2a: For loop comparing how many shared species exist between each community class
 
-# Creating a vector of total species 
+# creating vector containers for shared species between community classes
 
-"Total_Species" <- as.character(unique(data$Species, incomparables = F))
-Total_Species <- na.omit(Total_Species)
-
-Total_Species
-
-## For loop comparing barren plots species lists with all other community class species lists  
-
-"Matches_BP/SB" = c() # trying to create a vector container
+"Matches_BP/SB" = c() 
 "Matches_BP/WM" = c()
 "Matches_BP/MM" = c()
 "Matches_BP/DM" = c()
@@ -97,14 +91,8 @@ for (i in 1:length(BP_Species)) {
   
   }
 
-`Matches_BP/SB`
-`Matches_BP/WM`
-`Matches_BP/MM`
-`Matches_BP/DM`
-`Matches_BP/FF`
 
 
-## Now for Snow Bed plots vs. remaining
 
 # creating vector containers
 
@@ -139,10 +127,7 @@ for (i in 1:length(SB_Species)) {
   
 }
 
-`Matches_SB/WM`
-`Matches_SB/MM`
-`Matches_SB/DM`
-`Matches_SB/FF`
+
 
 
 ## Wet Meadow vs. remaining
@@ -174,10 +159,6 @@ for (i in 1:length(WM_Species)) {
   
 }
 
-`Matches_WM/MM`
-`Matches_WM/DM`
-`Matches_WM/FF`
- 
 
 ## Moist Meadow vs remaining 
 
@@ -200,8 +181,7 @@ for (i in 1:length(MM_Species)) {
   
 }
 
-`Matches_MM/DM`
-`Matches_MM/FF`
+
 
 ## Dry meadow against fellfield 
 
@@ -218,7 +198,7 @@ for (i in 1:length(DM_Species)) {
   
 }
 
-`Matches_DM/FF`
+
 
 # Showing all vectors of class species matches 
 
@@ -238,50 +218,154 @@ for (i in 1:length(DM_Species)) {
 `Matches_MM/FF`
 `Matches_DM/FF`
 
-# as length?
+# 2b: Writing a function that prints all the classes that a given species is wound within 
+## First, I'm going to merge all the species lists into a single dataframe 
+### To do this, I'm going to pad each vector so they all have the same length of the longest one 
+
+max.len = max(SpeciesN) # seeing how many total species there are (maximum possible length)
+
+# padding each species vector
+"BP" = c(BP_Species, rep(NA, max.len - length(BP_Species)))
+"SB" = c(SB_Species, rep(NA, max.len - length(SB_Species)))
+"WM" = c(WM_Species, rep(NA, max.len - length(WM_Species)))
+"MM" = c(MM_Species, rep(NA, max.len - length(MM_Species)))
+"DM" = c(DM_Species, rep(NA, max.len - length(DM_Species)))
+"FF" = c(FF_Species, rep(NA, max.len - length(FF_Species)))
+
+# creating a dataframe from the newly padded vectors 
+"ClassSpecies" <- cbind(BP, SB, WM, MM, DM, FF)
+as.data.frame(ClassSpecies)
+
+## Writing a fuction that lists the community classes a species is found within when a species is plugged in 
+
+find.sp.class <- function(species) {
+  classes <- if (species %in% BP) {
+    print("BP")
+  }
+  if (species %in% SB) {
+    print("SB") 
+  }
+  if (species %in% WM) {
+    print("WM") 
+  }
+  if (species %in% MM) {
+    print("MM") 
+  }
+  if (species %in% DM) {
+    print("DM") 
+  }
+  if (species %in% FF) {
+    print("FF") 
+  }
+}
+
+## Using the function to find species that fall within only 1-2 community class 
+
+find.sp.class(Total_Species[1])
+find.sp.class(Total_Species[2])
+find.sp.class(Total_Species[3])
+find.sp.class(Total_Species[4])
+find.sp.class(Total_Species[5])
+find.sp.class(Total_Species[6])
+find.sp.class(Total_Species[7])
+find.sp.class(Total_Species[8])
+find.sp.class(Total_Species[9])
+find.sp.class(Total_Species[10]) #
+find.sp.class(Total_Species[11])
+find.sp.class(Total_Species[12])
+find.sp.class(Total_Species[13])
+find.sp.class(Total_Species[14])
+find.sp.class(Total_Species[15]) #
+find.sp.class(Total_Species[16]) #
+find.sp.class(Total_Species[17])
+find.sp.class(Total_Species[18]) #
+find.sp.class(Total_Species[19])
+find.sp.class(Total_Species[20])
+find.sp.class(Total_Species[21]) #
+
+# From the results above, we can see that Total_Species[13], [19], and [20] only occur once, and we know which one it falls in 
+
+# Species that fall in only 1 community class:
+Total_Species[13] # Vulpicida tilesii (FF)
+Total_Species[19] # Acarospora shleicheri (DM)
+Total_Species[20] # Diploshistes scruposis (DM)
+
+#Species that fall in 2 related community classes:
+Total_Species[10] # Ochrolechia upsaliensis (DM) (FF)
+Total_Species[15] # Flavocetraria cucullata (MM) (DM)
+Total_Species[16] # Peltigera sp. (MM) (DM)
+Total_Species[18] # Flavocetraria nivalis (MM) (DM)
+Total_Species[21] # Megaspora verrucosa (MM) (DM)
 
 
-"Matches_BP/SB_length" <- length(as.integer(unique(`Matches_BP/SB`, incomparables = F)))
-"Matches_BP/WM_length" <- length(as.integer(unique(`Matches_BP/WM`, incomparables = F)))
-"Matches_BP/MM_length" <- length(as.integer(unique(`Matches_BP/MM`, incomparables = F)))
-"Matches_BP/DM_length" <- length(as.integer(unique(`Matches_BP/DM`, incomparables = F)))
-"Matches_BP/FF_length" <- length(as.integer(unique(`Matches_BP/FF`, incomparables = F)))
-"Matches_SB/WM_length" <- length(as.integer(unique(`Matches_SB/WM`, incomparables = F)))
-"Matches_SB/MM_length" <- length(as.integer(unique(`Matches_SB/MM`, incomparables = F)))
-"Matches_SB/DM_length" <- length(as.integer(unique(`Matches_SB/DM`, incomparables = F)))
-"Matches_SB/FF_length" <- length(as.integer(unique(`Matches_SB/FF`, incomparables = F)))
-"Matches_WM/MM_length" <- length(as.integer(unique(`Matches_WM/MM`, incomparables = F)))
-"Matches_WM/DM_length" <- length(as.integer(unique(`Matches_WM/DM`, incomparables = F)))
-"Matches_WM/FF_length" <- length(as.integer(unique(`Matches_WM/FF`, incomparables = F)))
-"Matches_MM/DM_length" <- length(as.integer(unique(`Matches_MM/DM`, incomparables = F)))
-"Matches_MM/FF_length" <- length(as.integer(unique(`Matches_MM/FF`, incomparables = F)))
-"Matches_DM/FF_length" <- length(as.integer(unique(`Matches_DM/FF`, incomparables = F)))
-`Matches_BP/SB_length`
-`Matches_BP/WM_length`
-`Matches_BP/MM_length`
-`Matches_BP/DM_length`
-`Matches_BP/FF_length`
-`Matches_SB/WM_length`
-`Matches_SB/MM_length`
-`Matches_SB/DM_length`
-`Matches_SB/FF_length`
-`Matches_WM/MM_length`
-`Matches_WM/DM_length`
-`Matches_WM/FF_length`
-`Matches_MM/DM_length`
-`Matches_MM/FF_length`
-`Matches_DM/FF_length`
 
-## Creating a venn diagram graphic showing shared species in 5 classes
- # loading the package 
+# Part 3: Working with the species that plisplay high specificity 
+## I'm going to begin by creating a new .csv file of the community classes that appeared to possess species with high habitat specificity and their species lists  
 
- library(gplots)
- "X" <- list(
-   "Fell Field" = FF_Species,
-   "Snow Bed" = SB_Species,
-   "Wet Meadow" = WM_Species,
-   "Moist Meadow" = MM_Species,
-   "Dry Meadow" = DM_Species)
+# Creating vectors to add to the Class tables below
+"FF_desig" <- rep("FF", 21)  
+"DM_desig" <- rep("DM", 21)
+"MM_desig" <- rep("MM", 21)
+
+## Creating a Table that includes significant species, classes in which they are found, and number of times they are observed in each class 
+
+"FFtab" <- cbind(FF_desig, as.data.frame(table(FF_plots$Species))) # Fell Field table
+"DMtab" <- cbind(DM_desig, as.data.frame(table(DM_plots$Species)))
+"MMtab" <- cbind(MM_desig, as.data.frame(table(MM_plots$Species)))
+
+# Writing FFtab into a .csv file
+
+write_csv(FFtab, "SpeciesAbund.csv") # Writing FFtab into a .csv file
+
+write.table(DMtab,file="SpeciesAbund.csv",sep=",",append=TRUE,row.names=FALSE,col.names=FALSE)
+
+write.table(MMtab,file="SpeciesAbund.csv",sep=",",append=TRUE,row.names=FALSE,col.names=FALSE)
+
+
+
+# Figuring out how frequently these species occur within their classes 
+
+### Data was cleaned in the command line terminal to create "Better.csv" file
+
+"cleandata" <- read.csv("Better.csv") # Reading in the newly created .csv file from the command line
+
+"FF_sigspecies" <- cleandata[cleandata$Class %in% c("FF"),]
+"DM_sigspecies" <- cleandata[cleandata$Class %in% c("DM"), ]
+"MM_sigspecies" <- cleandata[cleandata$Class %in% c("MM"), ]
+
+
+# Getting the percentage of plots in each given class that each species appears in 
+
+"FF_indeces" <- (FF_sigspecies$Count)/FF_PlotN
+"DM_indeces" <- (DM_sigspecies$Count)/DM_PlotN
+"MM_indeces" <- (MM_sigspecies$Count)/MM_PlotN
+
+
+# replacing count with abundance index
+
+FF_sigspecies$Count <- FF_indeces 
+FF_sigspecies 
+
+DM_sigspecies$Count <- DM_indeces 
+DM_sigspecies 
+
+MM_sigspecies$Count <- MM_indeces 
+MM_sigspecies 
+
+# Generating a .csv file showing the most relevant species in order of abundance in their associated community classes 
+
+write_csv((rbind(FF_sigspecies, DM_sigspecies, MM_sigspecies)) %>% arrange(desc(Count)), "FinalData.csv")
+
+
+# Part 4: Creating a venn diagram graphic showing shared species in 5 classes
+# loading the package 
+
+library(gplots)
+"X" <- list(
+  "Fell Field" = FF_Species,
+  "Snow Bed" = SB_Species,
+  "Wet Meadow" = WM_Species,
+  "Moist Meadow" = MM_Species,
+  "Dry Meadow" = DM_Species)
 venn(X, universe = NA)
-
 
