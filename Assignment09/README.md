@@ -29,6 +29,8 @@ Some potentially problematic qualities of the data are the spaces between the wo
 - by the end of this step, I produced a list of species with high habitat specificity and the rates at which they occur in their respective classes. 
 - I also produced a Venn diagram showing how many species were shared between each of five community classes (found at the link below).
 (https://photos.app.goo.gl/5Y7oad3ZnLY64HqKA)
+![alt text](https://github.com/kenyagates/EBIO4420Repo/blob/master/Assignment09/VennGraphic.jpeg?raw=true)
+
 
 
 
